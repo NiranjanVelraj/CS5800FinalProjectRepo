@@ -1,69 +1,25 @@
 /* eslint-disable no-restricted-globals */
-const FOOD_BANK_POS = [49.28552611515978, -123.11244303386674];
+const FOOD_BANK_POS = [0, 0];
 const REST_POS = [
-  [49.28393035793476, -123.10523314765034],
-  [49.28022112670912, -123.10994323160365],
-  [49.27687945236046, -123.11942842320242],
-  [49.29175178058913, -123.12747539582053],
-  [49.28188085125591, -123.13258708089386],
-  [49.288119726242485, -123.1405391737439],
+  [1.5, 4.5],
+  [3.3, 3.1],
+  [3.5, 1.0],
+  [2.5, -1.0],
+  [3.2, -3.0],
+  [2.0, -4.0],
+  [0.8, -3.0],
+  [-1.5, -4.0],
+  [-3.5, -2.0],
+  [-4.0, 1.0],
+  [-1.8, 1.5],
+  [-2.5, 3.5],
 ];
 
-const distFromStart = [754, 825, 1362, 1487, 2001, 2653];
-const restaurantDistMatrix = [
-  [0, 814, 1828, 2242, 2784, 3615],
-  [680, 0, 1120, 2061, 2269, 3100],
-  [1633, 972, 0, 2658, 1814, 3067],
-  [2242, 2173, 2403, 0, 1982, 1262],
-  [2799, 2313, 1342, 1610, 0, 1085],
-  [3345, 3148, 2176, 1262, 1085, 0],
-];
-
-const distance_old = (pt1, pt2) => {
-  const [lng1, lat1] = pt1;
-  const [lng2, lat2] = pt2;
-  if (lat1 === lat2 && lng1 === lng2) {
-    return 0;
-  }
-
-  var radlat1 = (Math.PI * lat1) / 180;
-  var radlat2 = (Math.PI * lat2) / 180;
-
-  var theta = lng1 - lng2;
-  var radtheta = (Math.PI * theta) / 180;
-
-  var dist =
-    Math.sin(radlat1) * Math.sin(radlat2) +
-    Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-
-  if (dist > 1) {
-    dist = 1;
-  }
-  dist = Math.acos(dist);
-  dist = (dist * 180) / Math.PI;
-  return dist * 60 * 1.1515 * 1.609344;
-};
-
-const findIndex = (point) => {
-  const [lng, lat] = point;
-  for (let i = 0; i < REST_POS.length; i++) {
-    if (lng === REST_POS[i][0] && lat === REST_POS[i][1]) {
-      return i;
-    }
-  }
-  return -1;
-};
-
-const distance = (pt1, pt2) => {
-  if (pt1 == FOOD_BANK_POS) {
-    return distFromStart[findIndex(pt2)];
-  } else if (pt2 == FOOD_BANK_POS) {
-    return distFromStart[findIndex(pt1)];
-  } else {
-    let sourceIndex = findIndex(pt1);
-    let destIndex = findIndex(pt2);
-    return restaurantDistMatrix[sourceIndex][destIndex];
-  }
+const distance = (point1, point2) => {
+  let dist = Math.sqrt(
+    Math.pow(point1[0] - point2[0], 2) + Math.pow(point1[1] - point2[1], 2)
+  );
+  return dist;
 };
 
 const pathCost = (path) => {
@@ -170,7 +126,7 @@ const convexHull = (points) => {
 };
 
 const threeTrip = () => {
-  let path = convexHull(REST_POS.slice());
+  let path = convexHull(REST_POS);
   let dupPath = path;
   for (let i = 0; i < dupPath.length; i += 4) {
     path.splice(i, 0, FOOD_BANK_POS);
