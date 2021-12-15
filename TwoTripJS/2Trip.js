@@ -38,7 +38,6 @@ function getInputPoints() {
 function findOptimalMatching() {
   let data = getInputPoints();
   let results = blossom(data);
-  console.log(results);
   return results;
 }
 
@@ -66,4 +65,4 @@ function computeTotalDistance() {
   return dist1 + dist2;
 }
 
-console.log(computeTotalDistance());
+console.log("Total Distance for Two Trip: ", computeTotalDistance());
